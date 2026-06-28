@@ -1,12 +1,11 @@
 # 🎭 Playwright Java – Sauce Demo Test Suite
 
-End-to-end automation framework for [sauce-demo.myshopify.com](https://sauce-demo.myshopify.com) built with **Playwright for Java**, **JUnit 5**, and **Allure Reports**.
+Automation framework for [sauce-demo.myshopify.com](https://sauce-demo.myshopify.com) built with **Playwright for Java**, **JUnit 5**, and **Allure Reports**.
 
-![CI](https://github.com/YOUR_USERNAME/YOUR_REPO/actions/workflows/playwright.yml/badge.svg)
 
 ---
 
-## 🏗️ Tech Stack
+## Tech Stack
 
 | Tool | Purpose |
 |------|---------|
@@ -69,7 +68,6 @@ mvn test
 ### Run on a specific browser
 ```bash
 mvn test -Dbrowser=firefox
-mvn test -Dbrowser=webkit
 ```
 
 ### Run in headed mode (see the browser)
@@ -100,7 +98,7 @@ mvn allure:serve
 Traces are saved to `target/traces/` after every test. Open them with:
 ```bash
 mvn exec:java -e -Dexec.mainClass=com.microsoft.playwright.CLI \
-  -Dexec.args="show-trace target/traces/YOUR_TEST_NAME.zip"
+  -Dexec.args="show-trace target/traces/TEST.zip"
 ```
 
 ---
