@@ -1,0 +1,8 @@
+"Epic","Feature","Story","FAILED","BROKEN","PASSED","SKIPPED","UNKNOWN"
+"Store","Product Catalog","","0","6","0","0","0"
+"Authentication","Login","Input validation","0","3","0","0","0"
+"Store","API + UI Hybrid","API health check → UI load","0","1","0","0","0"
+"Store","API + UI Hybrid","","0","0","1","0","0"
+"Authentication","Login","Failed login","0","1","0","0","0"
+"Authentication","Login","Successful login","1","0","0","0","0"
+"Store","API + UI Hybrid","Error handling","0","0","1","0","0"
