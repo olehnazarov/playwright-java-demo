@@ -6,7 +6,6 @@ on:
   pull_request:
     branches: [ main ]
   schedule:
-    # Run nightly at 02:00 UTC
     - cron: '0 2 * * *'
 
 jobs:
@@ -30,9 +29,8 @@ jobs:
           distribution: 'temurin'
           cache: maven
 
-      - name: Install Playwright browsers & system deps
-        run: mvn exec:java -e -Dexec.mainClass=com.microsoft.playwright.CLI \
-          -Dexec.args="install --with-deps ${{ matrix.browser }}"
+      - name: Install Playwright browsers
+        run: mvn exec:java -e -Dexec.mainClass=com.microsoft.playwright.CLI -Dexec.args="install --with-deps ${{ matrix.browser }}"
 
       - name: Run tests
         run: mvn test -Dbrowser=${{ matrix.browser }} -Dheadless=true
@@ -46,7 +44,7 @@ jobs:
           path: target/allure-results/
           retention-days: 14
 
-      - name: Upload Playwright traces (on failure)
+      - name: Upload Playwright traces on failure
         uses: actions/upload-artifact@v4
         if: failure()
         with:
@@ -54,7 +52,7 @@ jobs:
           path: target/traces/
           retention-days: 7
 
-      - name: Upload test videos (on failure)
+      - name: Upload test videos on failure
         uses: actions/upload-artifact@v4
         if: failure()
         with:
