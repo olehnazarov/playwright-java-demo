@@ -1,0 +1,19 @@
+{
+  "users": [
+    {
+      "email": "standard_user@saucedemo.com",
+      "password": "secret_sauce",
+      "role": "standard"
+    },
+    {
+      "email": "locked_out_user@saucedemo.com",
+      "password": "secret_sauce",
+      "role": "locked"
+    },
+    {
+      "email": "problem_user@saucedemo.com",
+      "password": "secret_sauce",
+      "role": "problem"
+    }
+  ]
+}
