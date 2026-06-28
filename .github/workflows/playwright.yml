@@ -11,7 +11,7 @@ on:
 jobs:
   test:
     name: E2E Tests – ${{ matrix.browser }}
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
 
     strategy:
       fail-fast: false
@@ -62,7 +62,7 @@ jobs:
 
   allure-report:
     name: Publish Allure Report
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     needs: test
     if: always()
 
