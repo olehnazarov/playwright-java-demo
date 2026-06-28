@@ -70,7 +70,7 @@ mvn test
 mvn test -Dbrowser=firefox
 ```
 
-### Run in headed mode (see the browser)
+### Run in headed mode
 ```bash
 mvn test -Dheadless=false
 ```

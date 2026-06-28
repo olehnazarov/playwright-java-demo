@@ -4,12 +4,12 @@ import com.microsoft.playwright.APIRequest;
 import com.microsoft.playwright.APIRequestContext;
 import com.microsoft.playwright.APIResponse;
 import com.microsoft.playwright.Playwright;
-import com.microsoft.playwright.options.RequestOptions;
 import com.saucedemo.base.BaseTest;
 import com.saucedemo.config.ConfigReader;
 import com.saucedemo.pages.StorePage;
 import io.qameta.allure.*;
 import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.extension.ExtendWith;
 
 import static com.microsoft.playwright.assertions.PlaywrightAssertions.assertThat;
 

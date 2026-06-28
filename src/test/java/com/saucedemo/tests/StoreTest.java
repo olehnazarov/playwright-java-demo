@@ -5,12 +5,11 @@ import com.saucedemo.pages.ProductPage;
 import com.saucedemo.pages.StorePage;
 import io.qameta.allure.*;
 import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
 import java.util.List;
-
-import static com.microsoft.playwright.assertions.PlaywrightAssertions.assertThat;
 
 @Epic("Store")
 @Feature("Product Catalog")

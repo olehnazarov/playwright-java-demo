@@ -6,10 +6,9 @@ import com.saucedemo.pages.LoginPage;
 import com.saucedemo.utils.TestDataFactory;
 import io.qameta.allure.*;
 import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
-
-import static com.microsoft.playwright.assertions.PlaywrightAssertions.assertThat;
 
 @Epic("Authentication")
 @Feature("Login")
@@ -35,7 +34,6 @@ class LoginTest extends BaseTest {
 
         Assertions.assertTrue(accountPage.isLoggedIn(),
                 "Expected to be on account page after login");
-        assertThat(page()).hasURL(org.junit.jupiter.api.Assertions::assertNotNull);
     }
 
     @Test
