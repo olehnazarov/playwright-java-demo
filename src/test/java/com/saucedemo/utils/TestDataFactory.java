@@ -2,18 +2,16 @@ package com.saucedemo.utils;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.io.InputStream;
 
-/**
- * Loads test data from src/test/resources/testdata/users.json.
- * Add more factories here as the suite grows.
- */
+@Component
 public class TestDataFactory {
 
     private static final ObjectMapper mapper = new ObjectMapper();
-    private static JsonNode usersNode;
+    private static final JsonNode usersNode;
 
     static {
         try (InputStream is = TestDataFactory.class
@@ -26,13 +24,13 @@ public class TestDataFactory {
         }
     }
 
-    public record UserCredentials(String email, String password, String role) {}
+    public record UserCredentials(String username, String password, String role) {}
 
     public static UserCredentials getUserByRole(String role) {
         for (JsonNode user : usersNode) {
             if (user.get("role").asText().equals(role)) {
                 return new UserCredentials(
-                        user.get("email").asText(),
+                        user.get("username").asText(),
                         user.get("password").asText(),
                         user.get("role").asText()
                 );
@@ -41,15 +39,8 @@ public class TestDataFactory {
         throw new RuntimeException("No user found with role: " + role);
     }
 
-    public static UserCredentials standardUser() {
-        return getUserByRole("standard");
-    }
-
-    public static UserCredentials lockedUser() {
-        return getUserByRole("locked");
-    }
-
-    public static UserCredentials problemUser() {
-        return getUserByRole("problem");
-    }
+    public UserCredentials standardUser()     { return getUserByRole("standard"); }
+    public UserCredentials lockedUser()       { return getUserByRole("locked"); }
+    public UserCredentials problemUser()      { return getUserByRole("problem"); }
+    public UserCredentials performanceUser()  { return getUserByRole("performance"); }
 }

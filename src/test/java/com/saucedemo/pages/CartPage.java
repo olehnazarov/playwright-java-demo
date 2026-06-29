@@ -5,42 +5,70 @@ import com.microsoft.playwright.Page;
 import com.saucedemo.base.BasePage;
 import io.qameta.allure.Step;
 
+import java.util.List;
+
 /**
- * Page Object for the shopping cart page.
+ * Page Object for /cart.html — shopping cart.
  */
 public class CartPage extends BasePage {
 
     private final Locator cartItems;
+    private final Locator itemNames;
+    private final Locator itemPrices;
     private final Locator checkoutButton;
-    private final Locator emptyCartMessage;
+    private final Locator continueShoppingButton;
 
     public CartPage(Page page) {
         super(page);
-        cartItems        = page.locator(".cart__item, [data-cart-item], tr.cart__row").first();
-        checkoutButton   = page.locator("[name='checkout'], [data-testid='checkout'], .cart__checkout").first();
-        emptyCartMessage = page.locator(".cart--empty, .empty-cart").first();
+        cartItems              = page.locator(".cart_item");
+        itemNames              = page.locator(".inventory_item_name");
+        itemPrices             = page.locator(".inventory_item_price");
+        checkoutButton         = page.locator("[data-test='checkout']");
+        continueShoppingButton = page.locator("[data-test='continue-shopping']");
     }
 
     @Override
     protected String getPath() {
-        return "/cart";
-    }
-
-    public boolean isCartEmpty() {
-        return emptyCartMessage.isVisible();
-    }
-
-    public boolean hasCheckoutButton() {
-        return checkoutButton.isVisible();
-    }
-
-    @Step("Proceed to checkout")
-    public void proceedToCheckout() {
-        checkoutButton.waitFor();
-        clickAndWaitForNav(checkoutButton);
+        return "/cart.html";
     }
 
     public boolean isLoaded() {
-        return page.url().contains("/cart");
+        return page.url().contains("cart.html");
+    }
+
+    public int getCartItemCount() {
+        return cartItems.count();
+    }
+
+    public List<String> getItemNames() {
+        return itemNames.allTextContents();
+    }
+
+    public List<String> getItemPrices() {
+        return itemPrices.allTextContents();
+    }
+
+    public boolean isCartEmpty() {
+        return cartItems.count() == 0;
+    }
+
+    @Step("Remove item from cart: {name}")
+    public void removeItem(String name) {
+        page.locator(".cart_item")
+                .filter(new Locator.FilterOptions().setHasText(name))
+                .locator("button")
+                .click();
+    }
+
+    @Step("Proceed to checkout")
+    public CheckoutPage proceedToCheckout() {
+        clickAndWaitForNav(checkoutButton);
+        return new CheckoutPage(page);
+    }
+
+    @Step("Continue shopping")
+    public InventoryPage continueShopping() {
+        clickAndWaitForNav(continueShoppingButton);
+        return new InventoryPage(page);
     }
 }

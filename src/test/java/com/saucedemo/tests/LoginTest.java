@@ -1,18 +1,21 @@
 package com.saucedemo.tests;
 
 import com.saucedemo.base.BaseTest;
-import com.saucedemo.pages.AccountPage;
+import com.saucedemo.pages.InventoryPage;
 import com.saucedemo.pages.LoginPage;
-import com.saucedemo.utils.TestDataFactory;
 import io.qameta.allure.*;
-import org.junit.jupiter.api.*;
+import io.qameta.allure.junit5.AllureJunit5;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
 @Epic("Authentication")
 @Feature("Login")
-@ExtendWith(io.qameta.allure.junit5.AllureJunit5.class)
+@ExtendWith(AllureJunit5.class)
 class LoginTest extends BaseTest {
 
     private LoginPage loginPage;
@@ -25,43 +28,53 @@ class LoginTest extends BaseTest {
 
     @Test
     @Severity(SeverityLevel.BLOCKER)
-    @DisplayName("Valid credentials → redirect to account page")
+    @DisplayName("Standard user can login successfully")
     @Story("Successful login")
     void shouldLoginWithValidCredentials() {
-        var user = TestDataFactory.standardUser();
+        var user = testData.standardUser();
+        InventoryPage inventoryPage = loginPage.loginAs(user.username(), user.password());
 
-        AccountPage accountPage = loginPage.loginAs(user.email(), user.password());
-
-        Assertions.assertTrue(accountPage.isLoggedIn(),
-                "Expected to be on account page after login");
+        Assertions.assertTrue(inventoryPage.isLoaded(),
+                "Expected to land on inventory page after login");
     }
 
     @Test
     @Severity(SeverityLevel.CRITICAL)
-    @DisplayName("Invalid password → stays on login page")
-    @Story("Failed login")
-    void shouldStayOnLoginPageWithWrongPassword() {
-        loginPage.loginExpectingError("user@example.com", "wrong_password");
+    @DisplayName("Locked out user sees error message")
+    @Story("Locked account")
+    void shouldShowErrorForLockedUser() {
+        var user = testData.lockedUser();
+        loginPage.loginExpectingError(user.username(), user.password());
 
-        Assertions.assertTrue(loginPage.isOnLoginPage(),
-                "Expected to remain on login page after failed login");
+        String error = loginPage.getErrorMessage();
+        Assertions.assertTrue(error.contains("locked out"),
+                "Expected 'locked out' error, got: " + error);
     }
 
-    @ParameterizedTest(name = "Login attempt: {0}")
+    @Test
+    @Severity(SeverityLevel.CRITICAL)
+    @DisplayName("Wrong password shows error")
+    @Story("Failed login")
+    void shouldShowErrorForWrongPassword() {
+        loginPage.loginExpectingError("standard_user", "wrong_password");
+
+        String error = loginPage.getErrorMessage();
+        Assertions.assertFalse(error.isBlank(), "Expected error message to be shown");
+        Assertions.assertTrue(loginPage.isOnLoginPage(), "Expected to stay on login page");
+    }
+
+    @ParameterizedTest(name = "{0}")
     @CsvSource({
-            "Empty email,        , secret_sauce",
-            "Empty password,     standard_user@saucedemo.com, ",
-            "Wrong credentials,  bad@test.com, badpass"
+            "Empty username, '', secret_sauce",
+            "Empty password, standard_user, ''",
+            "Both empty, '', ''"
     })
     @Severity(SeverityLevel.NORMAL)
     @Story("Input validation")
-    void shouldHandleInvalidInputs(String scenario, String email, String password) {
-        loginPage.loginExpectingError(
-                email == null ? "" : email.trim(),
-                password == null ? "" : password.trim()
-        );
+    void shouldValidateEmptyFields(String scenario, String username, String password) {
+        loginPage.loginExpectingError(username, password);
 
-        Assertions.assertTrue(loginPage.isOnLoginPage(),
-                "Scenario [" + scenario + "]: expected to stay on login page");
+        Assertions.assertFalse(loginPage.getErrorMessage().isBlank(),
+                "Scenario [" + scenario + "]: expected validation error");
     }
 }

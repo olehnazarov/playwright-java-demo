@@ -1,19 +1,24 @@
 {
   "users": [
     {
-      "email": "standard_user@saucedemo.com",
+      "username": "standard_user",
       "password": "secret_sauce",
       "role": "standard"
     },
     {
-      "email": "locked_out_user@saucedemo.com",
+      "username": "locked_out_user",
       "password": "secret_sauce",
       "role": "locked"
     },
     {
-      "email": "problem_user@saucedemo.com",
+      "username": "problem_user",
       "password": "secret_sauce",
       "role": "problem"
+    },
+    {
+      "username": "performance_glitch_user",
+      "password": "secret_sauce",
+      "role": "performance"
     }
   ]
 }
