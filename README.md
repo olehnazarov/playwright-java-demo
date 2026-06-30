@@ -1,6 +1,6 @@
 # 🎭 Playwright Java
 
-End-to-end automation framework for [saucedemo.com](https://www.saucedemo.com) built with **Playwright for Java**, **JUnit 5**, and **Allure Reports**.
+End-to-end automation framework for [saucedemo.com](https://www.saucedemo.com) built with **Playwright for Java**, **JUnit 5**, **Spring DI**, and **Allure Reports**.
 
 ![CI](https://github.com/olehnazarov/playwright-java-demo/actions/workflows/playwright.yml/badge.svg)
 
@@ -12,6 +12,7 @@ End-to-end automation framework for [saucedemo.com](https://www.saucedemo.com) b
 |------|---------|
 | [Playwright Java 1.44](https://playwright.dev/java/) | Browser automation |
 | [JUnit 5](https://junit.org/junit5/) | Test framework |
+| [Spring Context 6](https://spring.io/projects/spring-framework) | Dependency injection (config, test data) |
 | [Allure 2.27](https://allurereport.org/) | Rich test reporting |
 | [Maven](https://maven.apache.org/) | Build & dependency management |
 | [GitHub Actions](https://github.com/features/actions) | CI/CD pipeline |
@@ -23,10 +24,11 @@ End-to-end automation framework for [saucedemo.com](https://www.saucedemo.com) b
 ```
 src/test/java/com/saucedemo/
 ├── base/
-│   ├── BaseTest.java        # Thread-safe Playwright lifecycle
+│   ├── BaseTest.java        # Spring-extended JUnit base: @Autowired config & test data, thread-safe Playwright lifecycle
 │   └── BasePage.java        # Common page actions with @Step Allure annotations
 ├── config/
-│   └── ConfigReader.java    # Reads test.properties & system properties
+│   ├── TestConfig.java      # @Configuration — reads test.properties via @Value
+│   └── SpringContext.java   # Application context bootstrap
 ├── pages/                   # Page Object Model
 │   ├── LoginPage.java
 │   ├── InventoryPage.java
@@ -40,7 +42,7 @@ src/test/java/com/saucedemo/
 │   ├── CheckoutTest.java    # Checkout: happy path, validation errors
 │   └── ApiHybridTest.java   # API + UI hybrid tests & network mocking
 └── utils/
-    └── TestDataFactory.java # Loads users from testdata/users.json
+    └── TestDataFactory.java # @Component — loads users from testdata/users.json, injected via @Autowired
 ```
 
 ---
@@ -48,6 +50,7 @@ src/test/java/com/saucedemo/
 ## Features Demonstrated
 
 - **Page Object Model (POM)** — all locators declared as fields, fluent page chaining
+- **Spring Dependency Injection** — `TestConfig` and `TestDataFactory` are Spring beans, injected into tests via `@Autowired` (`SpringExtension` + `@ContextConfiguration`)
 - **Parallel execution** — `ThreadLocal<Page>` ensures thread-safety; 4 threads by default
 - **API + UI hybrid testing** — validate HTTP layer then assert UI reflects it
 - **Network mocking** — intercept requests via `page.route()` to simulate errors
@@ -117,7 +120,7 @@ The CI pipeline publishes the Allure report to **GitHub Pages** on every push to
 
 ---
 
-## ⚙️ Configuration
+## Configuration
 
 Edit `src/test/resources/test.properties`:
 
@@ -128,7 +131,7 @@ headless=true
 default.timeout.ms=10000
 ```
 
-All properties can be overridden via Maven `-D` flags.
+Properties are loaded by Spring's `TestConfig` via `@Value` and can be overridden via Maven `-D` flags.
 
 ---
 
