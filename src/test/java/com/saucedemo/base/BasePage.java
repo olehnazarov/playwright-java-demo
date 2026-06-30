@@ -2,8 +2,9 @@ package com.saucedemo.base;
 
 import com.microsoft.playwright.Locator;
 import com.microsoft.playwright.Page;
-import com.saucedemo.config.SpringContext;
 import io.qameta.allure.Step;
+
+import static com.saucedemo.base.BaseTest.config;
 
 public abstract class BasePage {
 
@@ -17,7 +18,7 @@ public abstract class BasePage {
 
     @Step("Navigate to page")
     public void navigate() {
-        page.navigate(SpringContext.config().getBaseUrl() + getPath());
+        page.navigate(config.getBaseUrl() + getPath());
     }
 
     @Step("Fill field")

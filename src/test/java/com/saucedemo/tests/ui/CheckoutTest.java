@@ -1,4 +1,4 @@
-package com.saucedemo.tests;
+package com.saucedemo.tests.ui;
 
 import com.saucedemo.base.BaseTest;
 import com.saucedemo.pages.CartPage;
